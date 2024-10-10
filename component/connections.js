@@ -6,7 +6,7 @@ export default class {
   }
 
   deleteConnection(clientId) {
-    this.conection = this.conection.filter((client) => {
+    this.connection = this.conection.filter((client) => {
       if (client.getClientId() == clientId) return false;
       return true;
     });
