@@ -39,12 +39,26 @@ io.on("connection", (socket) => {
       username: connections.getConnection(socket.id).getUsername(),
       creator: connections.getConnection(socket.id).isCreator(),
     });
-    socket.emit("userList", connections.getUsers());
-    socket.emit("filesContent", connections.getFilesContent());
+    io.emit("userList", connections.getUsers());
+    socket.emit("filesContent", getFilesNames(connections.getFilesContent()));
   });
 
-  socket.on("disconnect", () => connections.deleteConnection(socket.id));
+  socket.on("disconnect", () => {
+    connections.deleteConnection(socket.id);
+    io.emit("userList", connections.getUsers());
+  });
 });
+
+function getFilesNames(files) {
+  const formatter = {};
+
+  Object.keys(files).forEach((file) => {
+    const fileName = file.split("/").at(-1);
+    formatter[fileName] = files[file];
+  });
+
+  return formatter;
+}
 
 setInterval(() => {
   const creator = connections.getCreator();
@@ -53,11 +67,6 @@ setInterval(() => {
   const files = creator.checkUpdateFiles();
   if (!Object.keys(files).length) return;
 
-  const formatter = {};
-  Object.keys(files).forEach((file) => {
-    const fileName = file.split("/").at(-1);
-    formatter[fileName] = files[file];
-  });
-  io.emit("fileContent", formatter);
+  io.emit("filesUpdate", getFilesNames(files));
 }, 1000);
 server.listen(3001);
