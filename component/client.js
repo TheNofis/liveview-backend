@@ -25,6 +25,11 @@ export default class extends fileSystem {
   getClientId() {
     return this.clientId || null;
   }
+  getFiles() {
+    if (this.creator) {
+      return super.getFiles();
+    }
+  }
   disconnect() {
     this.socket.disconnect();
   }

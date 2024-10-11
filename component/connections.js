@@ -58,6 +58,10 @@ export default class {
   getCreator() {
     return this.connections.find((client) => client.isCreator()) || null;
   }
+
+  getFiles() {
+    return this.getCreator().getFiles();
+  }
   disconnect(clientId) {
     this.getConnection(clientId).disconnect();
     this.deleteConnection(clientId);
