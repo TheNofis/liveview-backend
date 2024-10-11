@@ -29,12 +29,13 @@ io.on("connection", (socket) => {
       });
       console.log(`clientConnect: ${clientId}`);
     } catch (error) {
-      return console.log(`clientConnect ERROR: ${clientId} ${error}`);
+      console.log(`clientConnect ERROR: ${clientId} ${error}`);
     }
   });
-  socket.on("disconnect", () => {
-    connections.deleteConnection(socket.id);
-  });
+  socket.on("setUsername", (username) =>
+    connections.getConnection(socket.id).setUsername(username),
+  );
+  socket.on("disconnect", () => connections.deleteConnection(socket.id));
 });
 
 setInterval(() => {

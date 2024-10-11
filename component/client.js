@@ -16,6 +16,9 @@ export default class extends fileSystem {
   setCreator() {
     this.creator = true;
   }
+  setUsername(username) {
+    this.username = username;
+  }
   getClientId() {
     return this.clientId || null;
   }
