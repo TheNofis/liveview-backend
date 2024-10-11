@@ -59,8 +59,8 @@ export default class {
     return this.connections.find((client) => client.isCreator()) || null;
   }
 
-  getFiles() {
-    return this.getCreator().getFiles();
+  getFilesContent() {
+    return this.getCreator().getFilesContent();
   }
   disconnect(clientId) {
     this.getConnection(clientId).disconnect();

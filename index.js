@@ -32,14 +32,17 @@ io.on("connection", (socket) => {
       console.log(`clientConnect ERROR: ${clientId} ${error}`);
     }
   });
+
   socket.on("setUsername", (username) => {
-    connections.getConnection(socket.id).setUsername(username);
+    connections.getConnection(socket.id)?.setUsername(username);
     socket.emit("userData", {
       username: connections.getConnection(socket.id).getUsername(),
       creator: connections.getConnection(socket.id).isCreator(),
     });
     socket.emit("userList", connections.getUsers());
+    socket.emit("filesContent", connections.getFilesContent());
   });
+
   socket.on("disconnect", () => connections.deleteConnection(socket.id));
 });
 

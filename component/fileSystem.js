@@ -37,7 +37,7 @@ export default class {
 
     return fileChange;
   }
-  getFiles() {
+  getFilesContent() {
     return this.fileContent;
   }
 }
