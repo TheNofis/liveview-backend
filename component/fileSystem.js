@@ -3,7 +3,7 @@ import { promises } from "fs";
 
 export default class {
   dirFile = [];
-  fileState = {};
+  fileContent = {};
 
   createRootDir(folder) {
     this.dirFile = [];
@@ -29,12 +29,15 @@ export default class {
 
     this.dirFile.forEach((file) => {
       const fileContent = readFileSync(file, "utf8");
-      if (this.fileState[file] == fileContent) return; // Файл не изменился
+      if (this.fileContent[file] == fileContent) return; // Файл не изменился
 
       fileChange[file] = fileContent;
-      this.fileState[file] = fileContent; // обновляем содержимое файлов
+      this.fileContent[file] = fileContent; // обновляем содержимое файлов
     });
 
     return fileChange;
+  }
+  getFiles() {
+    return this.fileContent;
   }
 }
