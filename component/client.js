@@ -7,13 +7,22 @@ export default class extends fileSystem {
     this.socket = props.socket;
     this.clientId = props.clientId;
 
-    this.admin = props.admin || false;
+    this.creator = props.creator || false;
   }
 
-  getAdmin() {
-    return this.admin;
+  isCreator() {
+    return this.creator;
+  }
+  setCreator() {
+    this.creator = true;
   }
   getClientId() {
-    return this.clientId;
+    return this.clientId || null;
+  }
+  sendUpdate(updateFiles) {
+    this.socket.emit("fileContent", updateFiles);
+  }
+  disconnect() {
+    this.socket.disconnect();
   }
 }

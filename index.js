@@ -1,52 +1,54 @@
 import http from "http";
+import express from "express";
 import { Server } from "socket.io";
 
 const server = http.createServer();
+const app = express();
 const io = new Server(server, {
   cors: {
     origin: "*",
   },
 });
 
-import Client from "./component/client.js";
 import Connections from "./component/connections.js";
 
-import { promises } from "fs";
-
 const connections = new Connections();
+
+app.use(express.static("live"));
+app.listen(3002);
 
 io.on("connection", (socket) => {
   socket.on("clientConnect", (clientId) => {
     if (clientId == null) return;
+    try {
+      const client = connections.newConection({ socket });
 
-    connections.newConection(
-      new Client({
-        socket,
-        clientId,
-        admin: connections.length ? false : true,
-      }),
-    );
-    connections.getConnection(clientId).createRootDir("./live");
-
-    console.log(`clientConnect: ${clientId}`);
-  });
-
-  socket.on("startLiveServer", (clientId) => {
-    if (clientId == null) return;
-
-    const data = connections[clientId].checkUpdateFiles();
-
-    console.log(data);
-    if (!Object.keys(data).length) return;
-    console.log("send data");
-
-    socket.emit("fileContent", data);
+      socket.emit("connectInfo", {
+        clientId: client.getClientId(),
+        creator: client.isCreator(),
+      });
+      console.log(`clientConnect: ${clientId}`);
+    } catch (error) {
+      return console.log(`clientConnect ERROR: ${clientId} ${error}`);
+    }
   });
   socket.on("disconnect", () => {
-    promises
-      .rmdir(`./live/${socket.id}`)
-      .then(() => console.log(`clientDisconnect: ${socket.id}`))
-      .catch((err) => console.log(`Error disconnect: ${socket.id} ${err}`));
+    connections.deleteConnection(socket.id);
   });
 });
+
+setInterval(() => {
+  const creator = connections.getCreator();
+
+  if (creator == null) return;
+  const files = creator.checkUpdateFiles();
+  if (!Object.keys(files).length) return;
+
+  const formatter = {};
+  Object.keys(files).forEach((file) => {
+    const fileName = file.split("/").at(-1);
+    formatter[fileName] = files[file];
+  });
+  io.emit("fileContent", formatter);
+}, 1000);
 server.listen(3001);
