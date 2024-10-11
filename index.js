@@ -37,8 +37,8 @@ io.on("connection", (socket) => {
     socket.emit("userData", {
       username: connections.getConnection(socket.id).getUsername(),
       creator: connections.getConnection(socket.id).isCreator(),
-      users: connections.getUsers(),
     });
+    socket.emit("users", connections.getUsers());
   });
   socket.on("disconnect", () => connections.deleteConnection(socket.id));
 });
