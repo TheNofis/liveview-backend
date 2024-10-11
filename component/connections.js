@@ -46,6 +46,14 @@ export default class {
       null
     );
   }
+  getUsers() {
+    return this.connections.map((client) => {
+      return {
+        username: client.getUsername(),
+        creator: client.isCreator(),
+      };
+    });
+  }
 
   getCreator() {
     return this.connections.find((client) => client.isCreator()) || null;

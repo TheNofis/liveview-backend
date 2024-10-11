@@ -18,7 +18,7 @@ app.use(express.static("live"));
 app.listen(3002);
 
 io.on("connection", (socket) => {
-  socket.on("clientConnect", (clientId) => {
+  socket.on("registerClient", (clientId) => {
     if (clientId == null) return;
     try {
       const client = connections.newConection({ socket });
@@ -32,9 +32,14 @@ io.on("connection", (socket) => {
       console.log(`clientConnect ERROR: ${clientId} ${error}`);
     }
   });
-  socket.on("setUsername", (username) =>
-    connections.getConnection(socket.id).setUsername(username),
-  );
+  socket.on("setUsername", (username) => {
+    connections.getConnection(socket.id).setUsername(username);
+    socket.emit("userData", {
+      username: connections.getConnection(socket.id).getUsername(),
+      creator: connections.getConnection(socket.id).isCreator(),
+      users: connections.getUsers(),
+    });
+  });
   socket.on("disconnect", () => connections.deleteConnection(socket.id));
 });
 
