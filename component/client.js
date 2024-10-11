@@ -25,9 +25,6 @@ export default class extends fileSystem {
   getClientId() {
     return this.clientId || null;
   }
-  sendUpdate(updateFiles) {
-    this.socket.emit("fileContent", updateFiles);
-  }
   disconnect() {
     this.socket.disconnect();
   }
