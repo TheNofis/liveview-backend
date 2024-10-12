@@ -1,4 +1,4 @@
-import { readFileSync, readdirSync, lstatSync } from "fs";
+import { readFileSync, lstatSync } from "fs";
 import { promises } from "fs";
 
 export default class {
