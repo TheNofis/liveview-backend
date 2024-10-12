@@ -36,7 +36,6 @@ export default class {
 }
 
 function getFilesNames(files) {
-  console.log(files);
   const formatter = {};
 
   Object.keys(files).forEach((file) => {
