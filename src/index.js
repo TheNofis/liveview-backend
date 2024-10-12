@@ -3,7 +3,6 @@ import express from "express";
 import { Server } from "socket.io";
 
 // html render
-import mustacheExpress from "mustache-express";
 
 const server = http.createServer();
 const app = express();
@@ -21,8 +20,6 @@ import InitHandler from "./socket/handler/initHandler.js";
 import ifRouter from "./router/iframeRouter.js";
 
 app.set("views", "./live/");
-app.set("view engine", "html");
-app.engine("html", mustacheExpress());
 
 app.use(ifRouter);
 
